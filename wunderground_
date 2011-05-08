@@ -67,6 +67,7 @@ multigraph wunderground_{0}_pressure
 graph_title Atmospheric Pressure at {0}
 graph_category weather
 graph_vlabel Pressure (mb)
+graph_scale no
 pressure.label Barometric Pressure
 
 multigraph wunderground_{0}_precip
