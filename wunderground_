@@ -3,6 +3,22 @@
 import sys
 import os
 import os.path
+import time
+import urllib
+import re
+import xml.dom.minidom
+
+def element_contents(name, parent):
+    elements = parent.getElementsByTagName(name)
+    if len(elements) == 0:
+        return None
+    else:
+        element = parent.getElementsByTagName(name)[0]
+        text = ''
+        for node in element.childNodes:
+            if node.nodeType == node.TEXT_NODE:
+                text = text + node.data
+        return text
 
 code = sys.argv[0][(sys.argv[0].rfind('_') + 1):]
 code = code.upper()
@@ -28,7 +44,8 @@ url = urls[mode].format(code)
 if len(sys.argv) == 2 and sys.argv[1] == "autoconf":
     print "yes"
 elif len(sys.argv) == 2 and sys.argv[1] == "config":
-    print """multigraph temperature
+    print(
+"""multigraph temperature
 graph_title Temperatures at {0}
 graph_vlabel degrees F
 graph_order temp feelslike dewpoint
@@ -51,7 +68,60 @@ multigraph precip
 graph_title Precipitation at {0}
 graph_category weather
 graph_vlabel Inches per hour
-""".format(code)
+
+multigraph wind
+graph_title Wind Speed at {0}
+graph_category weather
+graph_vlabel Miles per hour
+""".format(code))
 else:
-    print "cachefile: {0}\ncacheseconds: {1}\nurl: {2}".format(
-        cachefile, cacheseconds, url)
+    if (not(os.path.exists(cachefile)) or
+        (time.time() - os.path.getmtime(cachefile)) > cacheseconds):
+        print >> sys.stderr, "Downloading weather for {0}".format(code)
+        urllib.urlretrieve(url, cachefile)
+    d = xml.dom.minidom.parse(cachefile)
+    data = {'temp_f': None,
+            'heat_index_f': None,
+            'windchill_f': None,
+            'dewpoint_f': None,
+            'relative_humidity': None,
+            'pressure_mb': None,
+            'precip_1hr_in': None,
+            'wind_mph': None,
+           }
+    for i in data.keys():
+        data[i] = element_contents(i, d)
+        if data[i] == None:
+            data[i] = ''
+        else:
+            data[i] = re.sub(r'[^\d.]+', '', data[i])
+    feelslike = data['temp_f']
+    if data['windchill_f'] != '':
+        feelslike = data['windchill_f']
+    elif data['heat_index_f'] != '':
+        feelslike = data['heat_index_f']
+    print(
+"""multigraph temperature
+temp.value {0}
+feelslike.value {1}
+dewpoint.value {2}
+
+multigraph humidity
+humidity.value {3}
+
+multigraph pressure
+pressure.value {4}
+
+multigraph precip
+precip.value {5}
+
+multigraph wind
+windmph.value {6}
+""".format(data['temp_f'],
+           feelslike,
+           data['dewpoint_f'],
+           data['relative_humidity'],
+           data['pressure_mb'],
+           data['precip_1hr_in'],
+           data['wind_mph'])
+    )
