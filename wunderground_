@@ -79,7 +79,7 @@ multigraph wunderground_{0}_wind
 graph_title Wind Speed at {0}
 graph_category weather
 graph_vlabel Miles per hour
-windmpg.label windspeed
+windmph.label Wind Speed
 """.format(code))
 else:
     if (not(os.path.exists(cachefile)) or
