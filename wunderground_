@@ -51,9 +51,9 @@ graph_vlabel degrees F
 graph_order temp feelslike dewpoint
 graph_category weather
 graph_scale no
-temp.label temperature
-feelslike.label feels like
-dewpoint.label dew point
+temp.label Temperature
+feelslike.label Wind Chill/Heat Index ('feels like')
+dewpoint.label Dew Point
 
 multigraph wunderground_{0}_humidity
 graph_title Relative Humidity at {0}
@@ -61,19 +61,19 @@ graph_vlabel Relative Humidity (%)
 graph_category weather
 graph_scale no
 graph_args --lower-limit 0 --upper-limit 100 --rigid
-humidity.label humidity
+humidity.label Relative Humidity
 
 multigraph wunderground_{0}_pressure
 graph_title Atmospheric Pressure at {0}
 graph_category weather
 graph_vlabel Pressure (mb)
-pressure.label pressure
+pressure.label Barometric Pressure
 
 multigraph wunderground_{0}_precip
 graph_title Precipitation at {0}
 graph_category weather
 graph_vlabel Inches per hour
-precip.label precipitation
+precip.label Precipitation Amount
 
 multigraph wunderground_{0}_wind
 graph_title Wind Speed at {0}
