@@ -45,34 +45,41 @@ if len(sys.argv) == 2 and sys.argv[1] == "autoconf":
     print "yes"
 elif len(sys.argv) == 2 and sys.argv[1] == "config":
     print(
-"""multigraph temperature
+"""multigraph wunderground_{0}_temperature
 graph_title Temperatures at {0}
 graph_vlabel degrees F
 graph_order temp feelslike dewpoint
 graph_category weather
 graph_scale no
+temp.label temperature
+feelslike.label feels like
+dewpoint.label dew point
 
-multigraph humidity
+multigraph wunderground_{0}_humidity
 graph_title Relative Humidity at {0}
 graph_vlabel Relative Humidity (%)
 graph_category weather
 graph_scale no
 graph_args --lower-limit 0 --upper-limit 100 --rigid
+humidity.label humidity
 
-multigraph pressure
+multigraph wunderground_{0}_pressure
 graph_title Atmospheric Pressure at {0}
 graph_category weather
 graph_vlabel Pressure (mb)
+pressure.label pressure
 
-multigraph precip
+multigraph wunderground_{0}_precip
 graph_title Precipitation at {0}
 graph_category weather
 graph_vlabel Inches per hour
+precip.label precipitation
 
-multigraph wind
+multigraph wunderground_{0}_wind
 graph_title Wind Speed at {0}
 graph_category weather
 graph_vlabel Miles per hour
+windmpg.label windspeed
 """.format(code))
 else:
     if (not(os.path.exists(cachefile)) or
@@ -101,23 +108,24 @@ else:
     elif data['heat_index_f'] != '':
         feelslike = data['heat_index_f']
     print(
-"""multigraph temperature
-temp.value {0}
-feelslike.value {1}
-dewpoint.value {2}
+"""multigraph wunderground_{0}_temperature
+temp.value {1}
+feelslike.value {2}
+dewpoint.value {3}
 
-multigraph humidity
-humidity.value {3}
+multigraph wunderground_{0}_humidity
+humidity.value {4}
 
-multigraph pressure
-pressure.value {4}
+multigraph wunderground_{0}_pressure
+pressure.value {5}
 
-multigraph precip
-precip.value {5}
+multigraph wunderground_{0}_precip
+precip.value {6}
 
-multigraph wind
-windmph.value {6}
-""".format(data['temp_f'],
+multigraph wunderground_{0}_wind
+windmph.value {7}
+""".format(code,
+           data['temp_f'],
            feelslike,
            data['dewpoint_f'],
            data['relative_humidity'],
