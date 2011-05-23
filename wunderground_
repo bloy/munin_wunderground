@@ -68,7 +68,7 @@ graph_title Atmospheric Pressure at {0}
 graph_category weather
 graph_vlabel Pressure (mb)
 graph_scale no
-graph_args --lower-limit 850 --upper-limit 2000 --rigid
+graph_args --lower-limit 930 --upper-limit 1080 --rigid
 pressure.label Barometric Pressure
 
 multigraph wunderground_{0}_precip
